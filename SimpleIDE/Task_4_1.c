@@ -23,11 +23,12 @@ void SetDriveSpeed(int left, int right)
 {
   LeftWheelSpeed = left;
   RightWheelSpeed = right;
-  drive_speed(LeftWheelSpeed, RightWheelSpeed);
+  //drive_speed(LeftWheelSpeed, RightWheelSpeed);
+  drive_ramp(LeftWheelSpeed, RightWheelSpeed);
 }  
 
-int const StandardSpeed = 50;
-int const K = 0.6;
+int const StandardSpeed = 60;
+double const K = 1.25;
 //int const LowSpeed = 40;
 //int const HighSpeed = 20;
 
@@ -35,6 +36,7 @@ int main()
 {
   //MarkUsingLED(1); 
   double const InitIRValue = (GetAveragecurrentIRvalueSensorValue() + GetAveragecurrentIRvalueSensorValue()) / 2.0;
+  drive_setRampStep(10);
  // MarkUsingLED(1);
   
   SetDriveSpeed(StandardSpeed, StandardSpeed);
@@ -69,24 +71,32 @@ int main()
         break;
     }*/
     
-    if(DeltaIR <= 1.7 && DeltaIR >= - 1.7)    //Case 3: Straight wall
+    if(DeltaIR <= 1.5 && DeltaIR >= - 1.5)    //Case 3: Straight wall
     {
       SetDriveSpeed(StandardSpeed, StandardSpeed);      
     }      
     else
     {
-        int deltaSpeed = DeltaIR * K;
+        int deltaSpeed;
+        
         if(DeltaIR > 0)     //Case 4: The distance has increased so the robot is moving too much to the right. He must move left.
         {
-            SetDriveSpeed(StandardSpeed - deltaSpeed, StandardSpeed + deltaSpeed);
+            deltaSpeed = (DeltaIR + 5) * K;
+            
         }
         else     //Case 5: The distance has decreased so the robot is moving too much to the left. He must move right.
         {
-            SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
-        }    
+            deltaSpeed = (DeltaIR - 5) * K;
+            //SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
+        }
+        
+        SetDriveSpeed(StandardSpeed - deltaSpeed, StandardSpeed + deltaSpeed);
+        
+        printf("deltaSpeed = %d\n\n", deltaSpeed);
+            
     }
-   // pause(100);
-    //pause(100);    
+    pause(50);
+    //pause(500);    
   }
   
   return 0;
