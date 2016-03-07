@@ -1,20 +1,14 @@
 #include "simpletools.h"
 #include "abdrive.h"
 #include "ping.h"
-#include "basicmoves.h"
-#include "irsensors.h"
-
-double GetAveragecurrentIRvalueSensorValue()
-{
-  int currentIRvalue = 0;
-  const int nrIterations = 4;
-  for(int i=1; i<=nrIterations; i++)
-  {
-    currentIRvalue += IR_GetLeftSensorValue();
-  }
-  
-  return currentIRvalue * 1.0 / nrIterations;
-}
+#include "Headers/basic.h"
+#include "Headers/movement.h"
+#include "Headers/irsensors.h"
+#include "Headers/mathf.h"
+#include "Headers/basic.c"
+#include "Headers/movement.c"
+#include "Headers/irsensors.c"
+//#include "Headers/mathf.c"
 
 int LeftWheelSpeed;
 int RightWheelSpeed;
@@ -27,28 +21,51 @@ void SetDriveSpeed(int left, int right)
   drive_ramp(LeftWheelSpeed, RightWheelSpeed);
 }  
 
-int const StandardSpeed = 60;
-double const K = 1.25;
+int const StandardSpeed = 70;       //52 50 68
+//double const K = 1.25;
+int const Acceleration = 10;
+float const Kp = 4;
+float const Ki = 6;
+float const Kd = 0.05;
+float const waitingTime_ms = 50;
+
+double angle_radians = 0;
+double distance_X = 0;
+double distance_Y = 0;
+
 //int const LowSpeed = 40;
 //int const HighSpeed = 20;
 
+void Write()
+{
+    double angle_degrees = RadiansToDegrees(angle_radians);
+    sd_mount(22, 23, 24, 25);
+    FILE* fp = fopen("robotics.txt", "w");
+    char s[50];
+    sprintf(s, "%.2f cm \n %.2f degrees", distance_Y, angle_degrees);
+    fwrite(s, 1, 50, fp);
+    fclose(fp);
+}
+
 int main()
 {
-  //MarkUsingLED(1); 
-  double const InitIRValue = (GetAveragecurrentIRvalueSensorValue() + GetAveragecurrentIRvalueSensorValue()) / 2.0;
-  drive_setRampStep(10);
- // MarkUsingLED(1);
-  
+  int (*getAverageLeftSensorValueFunction)() = &IR_GetLeftSensorValue;
+  float const SetpointIRValue = ((*getAverageLeftSensorValueFunction)() + (*getAverageLeftSensorValueFunction)()) / 2.0;
+  double previous_deltaIR = 0;
+  double previous_integral = 0;
+  drive_setRampStep(Acceleration);
   SetDriveSpeed(StandardSpeed, StandardSpeed);
+  MarkUsingLED(1);
   
   while(1)
   {
+    Track_Movement(&angle_radians, &distance_X, &distance_Y);
     // First we get the value from the left IR sensor
-    double currentIRvalue = GetAveragecurrentIRvalueSensorValue();
+    float currentIRvalue = (*getAverageLeftSensorValueFunction)();
     // Now we get the delta value between the current IR sensor value and the initial value
-    double DeltaIR = currentIRvalue - InitIRValue;
+    float deltaIR = SetpointIRValue - currentIRvalue;
     
-    print("InitVal = %.2f   Left = %.2f   Delta = %.2f \n", InitIRValue, currentIRvalue, DeltaIR);
+    print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
     print("LeftSpeed = %d   RightSpeed = %d \n\n", LeftWheelSpeed, RightWheelSpeed);
     
     if(ping_cm(8) <= 5)    // Case 1: The wall turned right 90 degrees
@@ -56,51 +73,18 @@ int main()
         SetDriveSpeed(0,0);
         int distFromWall = ping_cm(8);
         int deltaDist = distFromWall - 5;
-        //Move_In_Straight_Line(0, deltaDist, 0);
         double deltaDist_ticks = CM_TO_TICKS(deltaDist);
         drive_goto(deltaDist_ticks, deltaDist_ticks);
         break;
     }
+
+    double deltaSpeed = PID(deltaIR, Kp, Ki, Kd, waitingTime_ms, &previous_deltaIR, &previous_integral);
+    SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
     
-  /*  if(currentIRvalue == 20)    //Case 2: The wall turned left 90 degrees
-    {
-        SetDriveSpeed(0,0);
-        int distFromWall = ping_cm(15);
-        int deltaDist = distFromWall - 5;
-        Move_In_Straight_Line(0, deltaDist, 1);
-        break;
-    }*/
-    
-    if(DeltaIR <= 1.5 && DeltaIR >= - 1.5)    //Case 3: Straight wall
-    {
-      SetDriveSpeed(StandardSpeed, StandardSpeed);      
-    }      
-    else
-    {
-        int deltaSpeed;
-        
-        if(DeltaIR > 0)     //Case 4: The distance has increased so the robot is moving too much to the right. He must move left.
-        {
-            deltaSpeed = (DeltaIR + 5) * K;
-            
-        }
-        else     //Case 5: The distance has decreased so the robot is moving too much to the left. He must move right.
-        {
-            deltaSpeed = (DeltaIR - 5) * K;
-            //SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
-        }
-        
-        SetDriveSpeed(StandardSpeed - deltaSpeed, StandardSpeed + deltaSpeed);
-        
-        printf("deltaSpeed = %d\n\n", deltaSpeed);
-            
-    }
-    pause(50);
-    //pause(500);    
+    pause(waitingTime_ms); 
   }
   
+  Write();
+  
   return 0;
-}      
-    
-    
-    //52 50 68
+}

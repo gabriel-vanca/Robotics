@@ -1,29 +1,23 @@
-#include "simpletools.h"                     
-#include "abdrive.h"
-
-void IR_InitialiseSensors()
-{
-    low(26);                                      // D/A0 & D/A1 to 0 V
-    low(27);
-}
+#include "simpletools.h"
+#include "irsensors.h"
 
 char IR_CheckLeftSensor()
 {
-    IR_InitialiseSensors();
+    low(26);
     freqout(11, 1, 38000);
     return input(10);
 }
 
 char IR_CheckRightSensor()
 {
-    IR_InitialiseSensors();
+    low(27);
     freqout(1, 1, 38000);
     return input(2);
 }
 
 int IR_GetLeftSensorValue()
 {
-    IR_InitialiseSensors();
+    low(26);
     int irLeft = 0;
     
     for(int dacVal = 0; dacVal < 160; dacVal += 8)  
@@ -36,20 +30,9 @@ int IR_GetLeftSensorValue()
     return irLeft;
 }
 
-/*int ledDist(int irOut, int irIn, int led) {
-	int dist = 0;
-	int i;
-	for(i = 0; i < 260; i += 8) {
-		dac_ctr(led, 0, i);
-		freqout(irOut, 1, 38000 + i * 100);
-		dist += input(irIn);
-	}
-	return dist;
-}*/
-
 int IR_GetRightSensorValue()
 {
-    IR_InitialiseSensors();
+    low(27);
     int irRight = 0;
     
     for(int dacVal = 0; dacVal < 160; dacVal += 8)  
@@ -62,3 +45,13 @@ int IR_GetRightSensorValue()
     return irRight;
 }
 
+float IR_GetAverageSensorValue(int numberOfIterations, int (*getAverageSensorValueFunction)())
+{
+  int currentIRvalue = 0;
+  for(int i=1; i<= numberOfIterations; i++)
+  {
+    currentIRvalue += (*getAverageSensorValueFunction)();
+  }
+  
+  return currentIRvalue * 1.0f / numberOfIterations;
+}
