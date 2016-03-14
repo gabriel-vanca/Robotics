@@ -34,8 +34,8 @@ double distance_Y = 0;
     int leftWheel_Ticks;
     int rightWheel_Ticks;
 
-//  int vx[900],vy[900];
-  //int x,y;
+  short int vx[1000],vy[1000];
+  int x,y;
 
 void Write()
 {
@@ -62,7 +62,7 @@ int main()
   
   while(1)
   {
-    //index++;
+    index++;
     // First we get the value from the left IR sensor
     float currentIRvalue = (*getAverageLeftSensorValueFunction)();
     // Now we get the delta value between the current IR sensor value and the initial value
@@ -78,23 +78,25 @@ int main()
     double deltaSpeed = PID(deltaIR, Kp, Ki, Kd, waitingTime_ms, &previous_deltaIR, &previous_integral);
     SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
     
-    print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
-    print("LeftSpeed = %d   RightSpeed = %d \n\n", LeftWheelSpeed, RightWheelSpeed);
+    //print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
+    //print("LeftSpeed = %d   RightSpeed = %d \n", LeftWheelSpeed, RightWheelSpeed);
     
-    //drive_getTicks(&leftWheel_Ticks, &rightWheel_Ticks);
- /*   vx[index] = leftWheel_Ticks - x;
+    drive_getTicks(&leftWheel_Ticks, &rightWheel_Ticks);
+    vx[index] = leftWheel_Ticks - x;
     vy[index] = rightWheel_Ticks - y;
     x = leftWheel_Ticks;
-    y = rightWheel_Ticks;*/
+    y = rightWheel_Ticks;
+
+    //print("Ticks_left = %d  Ticks_right= %d \n\n", vx[index], vy[index]);
     
     pause(waitingTime_ms); 
   }
-/*  int j;
+  int j;
   for(j=index;j;j--) 
   {
-    drive_goto(vy[j],vx[j]);
-    //pause(waitingTime_ms);
+    drive_ramp(vy[j],vx[j]);
+    pause(waitingTime_ms);
   }
-  */
+  
   return 0;
 }
