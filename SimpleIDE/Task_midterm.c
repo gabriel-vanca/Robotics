@@ -22,19 +22,20 @@ void SetDriveSpeed(int left, int right)
 }  
 
 int const StandardSpeed = 70;       //52 50 68
-//double const K = 1.25;
 int const Acceleration = 10;
-float const Kp = 4;
-float const Ki = 6;
-float const Kd = 0.05;
+float const Kp = 4.8;
+float const Ki = 0; //6
+float const Kd = 0;  //0.05
 float const waitingTime_ms = 50;
 
 double angle_radians = 0;
 double distance_X = 0;
 double distance_Y = 0;
+    int leftWheel_Ticks;
+    int rightWheel_Ticks;
 
-//int const LowSpeed = 40;
-//int const HighSpeed = 20;
+//  int vx[900],vy[900];
+  //int x,y;
 
 void Write()
 {
@@ -56,35 +57,44 @@ int main()
   drive_setRampStep(Acceleration);
   SetDriveSpeed(StandardSpeed, StandardSpeed);
   MarkUsingLED(1);
+
+    int index = 0;
   
   while(1)
   {
-    Track_Movement(&angle_radians, &distance_X, &distance_Y);
+    //index++;
     // First we get the value from the left IR sensor
     float currentIRvalue = (*getAverageLeftSensorValueFunction)();
     // Now we get the delta value between the current IR sensor value and the initial value
     float deltaIR = SetpointIRValue - currentIRvalue;
-    
-    print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
-    print("LeftSpeed = %d   RightSpeed = %d \n\n", LeftWheelSpeed, RightWheelSpeed);
-    
-    if(ping_cm(8) <= 5)    // Case 1: The wall turned right 90 degrees
+       
+    if(ping_cm(8) <= 7)    // Case 1: The wall turned right 90 degrees
     {
         SetDriveSpeed(0,0);
-        int distFromWall = ping_cm(8);
-        int deltaDist = distFromWall - 5;
-        double deltaDist_ticks = CM_TO_TICKS(deltaDist);
-        drive_goto(deltaDist_ticks, deltaDist_ticks);
+        Rotate_ZeroRadius(180,1);        
         break;
     }
 
     double deltaSpeed = PID(deltaIR, Kp, Ki, Kd, waitingTime_ms, &previous_deltaIR, &previous_integral);
     SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
     
+    print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
+    print("LeftSpeed = %d   RightSpeed = %d \n\n", LeftWheelSpeed, RightWheelSpeed);
+    
+    //drive_getTicks(&leftWheel_Ticks, &rightWheel_Ticks);
+ /*   vx[index] = leftWheel_Ticks - x;
+    vy[index] = rightWheel_Ticks - y;
+    x = leftWheel_Ticks;
+    y = rightWheel_Ticks;*/
+    
     pause(waitingTime_ms); 
   }
-  
-  Write();
-  
+/*  int j;
+  for(j=index;j;j--) 
+  {
+    drive_goto(vy[j],vx[j]);
+    //pause(waitingTime_ms);
+  }
+  */
   return 0;
 }
