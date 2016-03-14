@@ -1,0 +1,1 @@
+void MarkUsingLED(int howManyTimes);
