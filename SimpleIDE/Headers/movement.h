@@ -4,24 +4,23 @@
 #include <math.h>
 #include "mathf.h"
 
-#define CM_TO_TICKS(value) (value * 3.07)
-#define TICKS_TO_CM(value) (value * 0.325)
+#define CM_TO_TICKS(value) ((value) * 3.07)
+#define TICKS_TO_CM(value) ((value) * 0.325)
 #define DistanceBetweenWheels_CM 10.58
 
-void Rotate_ZeroRadius(double angle_degrees, char rotateLeft)
+void Rotate_ZeroRadiusTurn(double angle_radians, char rotateLeft)
 {
-    int ticks = (int) (angle_degrees * Math_PI / 180.0 * 16.2769);
+    int ticks = (int) (angle_radians * 16.2769);
     if(rotateLeft)
         drive_goto(-ticks,ticks);
     else
         drive_goto(ticks,-ticks);
 }
 
-void Rotate_PivotTurn(double angle_degrees, char rotateLeft)
+void Rotate_PivotTurn(double angle_radians, char rotateLeft)
 {
     const double MM_Per_Radian = 105.8;
-    double degrees_radians = angle_degrees * Math_PI / 180;
-    int ticks = (int) (degrees_radians / 3.25);
+    int ticks = (int) (angle_radians * MM_Per_Radian / 3.25);
     if(rotateLeft)
         drive_goto(0, ticks);
     else
@@ -35,7 +34,7 @@ void Move_In_Straight_Line(double currentPosition, double finalPosition, char fa
     
 	if((facingRight && distance_ticks < 0) || (!facingRight && distance_ticks > 0))
 	{
-		Rotate_ZeroRadius(180, 1);
+		Rotate_ZeroRadiusTurn(180, 1);
         facingRight = 1 - facingRight;
 	}
  	
@@ -45,14 +44,23 @@ void Move_In_Straight_Line(double currentPosition, double finalPosition, char fa
 	drive_goto(distance_ticks, distance_ticks);
 }
 
-void Track_Movement(double *angle_radians, double *distance_X, double *distance_Y)
+void Track_Movement(double *angle_radians, double *distance_X, double *distance_Y, int *totalLeftWheel_Ticks, int *totalRightWheel_Ticks)
 {
     int leftWheel_Ticks = 0;
     int rightWheel_Ticks = 0;
     drive_getTicks(&leftWheel_Ticks, &rightWheel_Ticks);
     
-    double leftWheel_CM = TICKS_TO_CM(leftWheel_Ticks);
+    int change;
+    change = leftWheel_Ticks - (*totalLeftWheel_Ticks);
+    leftWheel_Ticks = change;
+    (*totalLeftWheel_Ticks) += change;
     
+    change = rightWheel_Ticks - (*totalRightWheel_Ticks);
+    rightWheel_Ticks = change;
+    (*totalRightWheel_Ticks) += change;
+    
+    double leftWheel_CM = TICKS_TO_CM(leftWheel_Ticks);
+        
     if(leftWheel_Ticks == rightWheel_Ticks)
     {
         (*angle_radians) = 0;
@@ -72,7 +80,7 @@ void Track_Movement(double *angle_radians, double *distance_X, double *distance_
     
     (*distance_Y) = robotRadius * ( sin(oldAngle_radians + newAngle_radians) - sin(oldAngle_radians) );
     (*distance_X) = robotRadius * ( cos(oldAngle_radians) - cos(oldAngle_radians + newAngle_radians) );
-    (*angle_radians) = oldAngle_radians + newAngle_radians;
+    (*angle_radians) = newAngle_radians;
 }
 
 double PID(double distanceError, float Kp, float Ki, float Kd, int waitingTime_ms,
