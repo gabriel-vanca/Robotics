@@ -1,9 +1,37 @@
-char IsPositive(float value);
+#ifndef MATHF_HEADER_GUARD
+#define MATHF_HEADER_GUARD
 
-int Maxim(int a, int b);
+#define Math_PI (3.14159265359)
 
-int Minim(int a, int b);
+char IsPositive(float value)
+{
+    if(value>0)
+      return 1;
+    return 0;
+}
 
-double RadiansToDegrees(double radians);
+int Maxim(int a, int b)
+{
+  if(a>b)
+    return a;
+  return b;
+}
 
-double DegreesToRadians(double degrees);
+int Minim(int a, int b)
+{
+  if(a<b)
+    return a;
+  return b;
+}
+
+double RadiansToDegrees(double radians)
+{
+    return radians * 180 / Math_PI;
+}    
+
+double DegreesToRadians(double degrees)
+{
+    return degrees * Math_PI / 180;
+}
+
+#endif
