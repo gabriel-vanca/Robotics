@@ -6,13 +6,15 @@
 #include "Headers/irsensors.h"
 #include "Headers/mathf.h"
 
-int LeftWheelSpeed;     // TODO:: Change to pointer and put it in GoForward()
-int RightWheelSpeed;    // TODO:: Change to pointer and put it in GoForward()
+int const StandardSpeed = 70;       //TODO:: Can it be increased?
+int const Acceleration = 10;        //TODO:: Still have to decide if this is the best value. Maybe go with 12.
+int const WaitingTime_ms = 50;
+int LeftWheelSpeed;
+int RightWheelSpeed;
 
-
-int PositionChange_Length;
-short int PositionChange_AngleDegrees[1000];
-short int PositionChange_Distance[1000];
+unsigned int SpeedChange_Length;
+char SpeedChange_DeltaSpeed[3200];               // The variation from the StandardSpeed
+unsigned short int SpeedChange_Cycles[3200];      // The number of check cycles for which the time remained constant. The time in ms optained by multypling with WaitingTime_ms 
 
 void SetDriveSpeed(int left, int right)
 {
@@ -22,20 +24,12 @@ void SetDriveSpeed(int left, int right)
   drive_ramp(LeftWheelSpeed, RightWheelSpeed);          //TODO:: Stil have to decide if we should use drive_ramp or drive_speed
 }
 
-double GetDistance(double distance_X, double distance_Y)
-{
-    return sqrt(distance_X * distance_X + distance_Y * distance_Y);
-}
-
 void GoForward()
 {
-    int const StandardSpeed = 70;       //TODO:: Can it be increased
-    int const Acceleration = 10;        //TODO:: Still have to decide if this is the best value
-    float const Kp = 4.8;           //4.8/0/0
+    float const Kp = 4.8;               //TODO:: Is this the best choice?
     float const Ki = 0;                 //TODO:: Can we make it work?
     float const Kd = 0;                 //TODO:: Can we make it work?
-    int const WaitingTime_ms = 50;
-    float const AngleLimit = DegreesToRadians(15);
+    float const AngleChangeLimit = DegreesToRadians(7);
     int (*getLeftSensorValueFunction)() = &IR_GetLeftSensorValue;
     float const SetpointIRValue = IR_GetAverageSensorValue(3, getLeftSensorValueFunction, WaitingTime_ms);
     
@@ -43,14 +37,14 @@ void GoForward()
     double previous_integral = 0;    
     int totalLeftWheel_Ticks = 0;
     int totalRightWheel_Ticks = 0;
-    double angle_radians = Math_PI / 2;
+    double angleChange_radians = Math_PI / 2;
     double distance_X = 0;
     double distance_Y = 0;
-    double temp_change_angle_rad = 0;
-    double temp_change_dist_cm = 0;
     
-    drive_setRampStep(Acceleration);
     SetDriveSpeed(StandardSpeed, StandardSpeed);
+    SpeedChange_DeltaSpeed[0] = 0;
+    SpeedChange_Cycles[0] = 0;
+    SpeedChange_Length = 0;
 
     while(1)
     {
@@ -61,10 +55,7 @@ void GoForward()
        
         if(ping_cm(8) <= 10)    // We got to the wall. Break current loop
         {
-            SetDriveSpeed(0,0);        
-            PositionChange_AngleDegrees[PositionChange_Length] = (short int) RadiansToDegrees(temp_change_angle_rad);
-            PositionChange_Distance[PositionChange_Length] = (short int) CM_TO_TICKS(temp_change_dist_cm);
-            PositionChange_Length++;
+            SetDriveSpeed(0,0);
             break;
         }
 
@@ -73,46 +64,29 @@ void GoForward()
         double deltaSpeed = PID(deltaIR, Kp, Ki, Kd, (float) WaitingTime_ms, &previous_deltaIR, &previous_integral);
         SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
         
-        Track_Movement(&angle_radians, &distance_X, &distance_Y, &totalLeftWheel_Ticks, &totalRightWheel_Ticks);
-        double distance_cm = GetDistance(distance_X, distance_Y);
+        Track_Movement(&angleChange_radians, &distance_X, &distance_Y, &totalLeftWheel_Ticks, &totalRightWheel_Ticks);
         
-        if(temp_change_angle_rad <= AngleLimit && temp_change_angle_rad >= -AngleLimit) // Normal speed until now
+        if(-AngleChangeLimit < angleChange_radians && angleChange_radians < AngleChangeLimit)
         {
-            if(angle_radians <= AngleLimit && angle_radians >= -AngleLimit) // No turn
-            {
-                temp_change_angle_rad += angle_radians;
-                temp_change_dist_cm += distance_cm;
-            }
-            else    // A turn starts
-            {
-                PositionChange_AngleDegrees[PositionChange_Length] = (short int) RadiansToDegrees(temp_change_angle_rad);
-                PositionChange_Distance[PositionChange_Length] = (short int) CM_TO_TICKS(temp_change_dist_cm);
-                PositionChange_Length++;
-                temp_change_angle_rad = angle_radians;
-                temp_change_dist_cm = distance_cm;
-            }
+            /* We update the previous deltaSpeed using a ponderate average so that we don't loose values.
+               We increase by one the number of cycles for which the angle remained almost unchanged */
+               
+            SpeedChange_DeltaSpeed[SpeedChange_Length] = Round((SpeedChange_DeltaSpeed[SpeedChange_Length] * SpeedChange_Cycles[SpeedChange_Length] + deltaSpeed) / (++SpeedChange_Cycles[SpeedChange_Length]));
         }
-        else    //During a turn
+        else    // A sharp angle change was detected. The robot is at a turn.
         {
-            temp_change_angle_rad += angle_radians;
-            temp_change_dist_cm += distance_cm;
-            
-            if(angle_radians <= AngleLimit && angle_radians >= -AngleLimit)  // Turn is ending
-            {
-                PositionChange_AngleDegrees[PositionChange_Length] = (short int) RadiansToDegrees(temp_change_angle_rad);
-                PositionChange_Distance[PositionChange_Length] = (short int) CM_TO_TICKS(temp_change_dist_cm);
-                PositionChange_Length++;
-                temp_change_angle_rad = 0;
-                temp_change_dist_cm = 0;
-            }
+            SpeedChange_Length++;
+            SpeedChange_Cycles[SpeedChange_Length] = 1;
+            SpeedChange_DeltaSpeed[SpeedChange_Length] = deltaSpeed;
         }
         
+           
         /*
           print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
           print("LeftSpeed = %d   RightSpeed = %d \n", LeftWheelSpeed, RightWheelSpeed);
         */
 
-        print("angle change = %f, dist = %f \n", RadiansToDegrees(angle_radians), distance_cm);
+        //print("angle change = %f", RadiansToDegrees(angle_radians));
     
         pause(WaitingTime_ms); 
     }
@@ -120,19 +94,20 @@ void GoForward()
 
 void GetBack()
 {
-  for(int index = PositionChange_Length - 1;index >= 0 ;index--) 
+  for(int index = SpeedChange_Length;index >= 0;index--) 
   {
-      drive_goto(PositionChange_Distance[PositionChange_Length] - 10, PositionChange_Distance[PositionChange_Length] - 10);
-      Rotate_ZeroRadiusTurn(DegreesToRadians(PositionChange_AngleDegrees[PositionChange_Length]),1);
+      /* We are parsing the array and we add the deltaSpeeds optained when the robot went forward to the same StandardSpeed.
+         After that, we are pausing the program accordingly with the number of cycles for which the angle has remained pretty mcuh constant.
+         It is worth nothing that we are reversing the speeds of the wheels then going back. */
+         
+      SetDriveSpeed(StandardSpeed - SpeedChange_DeltaSpeed[index], StandardSpeed + SpeedChange_DeltaSpeed[index]);
+      pause(SpeedChange_Cycles[index] * WaitingTime_ms);        //TODO:: Maybe slowly decrease pause by 20 ms to account for lateness in sensor detection, speed change and acceleration
   }
-  
-  int deltaDist = (PositionChange_Length - 1) * 3;
-  drive_goto(CM_TO_TICKS(deltaDist), CM_TO_TICKS(deltaDist));
-  
 }
 
 int main()
 {   
+  drive_setRampStep(Acceleration);
   GoForward();
   Rotate_ZeroRadiusTurn(Math_PI, 0);
   GetBack();

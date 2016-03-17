@@ -34,4 +34,9 @@ double DegreesToRadians(double degrees)
     return degrees * Math_PI / 180;
 }
 
+int Round(double number)
+{
+    return (number >= 0) ? (int)(number + 0.5) : (int)(number - 0.5);
+}
+
 #endif
