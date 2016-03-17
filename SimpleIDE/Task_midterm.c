@@ -31,11 +31,11 @@ void GoForward()
 {
     int const StandardSpeed = 70;       //TODO:: Can it be increased
     int const Acceleration = 10;        //TODO:: Still have to decide if this is the best value
-    float const Kp = 4.8;
+    float const Kp = 4.8;           //4.8/0/0
     float const Ki = 0;                 //TODO:: Can we make it work?
     float const Kd = 0;                 //TODO:: Can we make it work?
     int const WaitingTime_ms = 50;
-    float const AngleLimit = DegreesToRadians(7);
+    float const AngleLimit = DegreesToRadians(15);
     int (*getLeftSensorValueFunction)() = &IR_GetLeftSensorValue;
     float const SetpointIRValue = IR_GetAverageSensorValue(3, getLeftSensorValueFunction, WaitingTime_ms);
     
@@ -59,7 +59,7 @@ void GoForward()
         // Now we get the delta value between the current IR sensor value and the initial value
         float deltaIR = SetpointIRValue - currentIRvalue;
        
-        if(ping_cm(8) <= 7)    // We got to the wall. Break current loop
+        if(ping_cm(8) <= 10)    // We got to the wall. Break current loop
         {
             SetDriveSpeed(0,0);        
             PositionChange_AngleDegrees[PositionChange_Length] = (short int) RadiansToDegrees(temp_change_angle_rad);
@@ -74,13 +74,14 @@ void GoForward()
         SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
         
         Track_Movement(&angle_radians, &distance_X, &distance_Y, &totalLeftWheel_Ticks, &totalRightWheel_Ticks);
+        double distance_cm = GetDistance(distance_X, distance_Y);
         
-        if(temp_change_angle_rad <= AngleLimit) // Normal speed until now
+        if(temp_change_angle_rad <= AngleLimit && temp_change_angle_rad >= -AngleLimit) // Normal speed until now
         {
-            if(angle_radians <= AngleLimit) // No turn
+            if(angle_radians <= AngleLimit && angle_radians >= -AngleLimit) // No turn
             {
                 temp_change_angle_rad += angle_radians;
-                temp_change_dist_cm += GetDistance(distance_X, distance_Y);
+                temp_change_dist_cm += distance_cm;
             }
             else    // A turn starts
             {
@@ -88,20 +89,20 @@ void GoForward()
                 PositionChange_Distance[PositionChange_Length] = (short int) CM_TO_TICKS(temp_change_dist_cm);
                 PositionChange_Length++;
                 temp_change_angle_rad = angle_radians;
-                temp_change_dist_cm = GetDistance(distance_X, distance_Y);
+                temp_change_dist_cm = distance_cm;
             }
         }
         else    //During a turn
         {
             temp_change_angle_rad += angle_radians;
-            temp_change_dist_cm += GetDistance(distance_X, distance_Y);
+            temp_change_dist_cm += distance_cm;
             
-            if(angle_radians < AngleLimit)  // Turn is ending
+            if(angle_radians <= AngleLimit && angle_radians >= -AngleLimit)  // Turn is ending
             {
                 PositionChange_AngleDegrees[PositionChange_Length] = (short int) RadiansToDegrees(temp_change_angle_rad);
                 PositionChange_Distance[PositionChange_Length] = (short int) CM_TO_TICKS(temp_change_dist_cm);
                 PositionChange_Length++;
-                temp_change_angle_rad = Math_PI / 2;
+                temp_change_angle_rad = 0;
                 temp_change_dist_cm = 0;
             }
         }
@@ -110,6 +111,8 @@ void GoForward()
           print("SetpointIRValue = %.2f   Left = %.2f   Delta = %.2f \n", SetpointIRValue, currentIRvalue, deltaIR);
           print("LeftSpeed = %d   RightSpeed = %d \n", LeftWheelSpeed, RightWheelSpeed);
         */
+
+        print("angle change = %f, dist = %f \n", RadiansToDegrees(angle_radians), distance_cm);
     
         pause(WaitingTime_ms); 
     }
@@ -117,11 +120,15 @@ void GoForward()
 
 void GetBack()
 {
-  for(PositionChange_Length--;PositionChange_Length;PositionChange_Length--) 
+  for(int index = PositionChange_Length - 1;index >= 0 ;index--) 
   {
-      Rotate_ZeroRadiusTurn(DegreesToRadians(PositionChange_AngleDegrees[PositionChange_Length] *1.0),0);
-      drive_goto(PositionChange_Distance[PositionChange_Length], PositionChange_Distance[PositionChange_Length]);
+      drive_goto(PositionChange_Distance[PositionChange_Length] - 10, PositionChange_Distance[PositionChange_Length] - 10);
+      Rotate_ZeroRadiusTurn(DegreesToRadians(PositionChange_AngleDegrees[PositionChange_Length]),1);
   }
+  
+  int deltaDist = (PositionChange_Length - 1) * 3;
+  drive_goto(CM_TO_TICKS(deltaDist), CM_TO_TICKS(deltaDist));
+  
 }
 
 int main()
