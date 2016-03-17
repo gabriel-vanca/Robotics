@@ -8,7 +8,7 @@
 
 int const StandardSpeed = 70;       //TODO:: Can it be increased?
 int const Acceleration = 10;        //TODO:: Still have to decide if this is the best value. Maybe go with 12.
-int const WaitingTime_ms = 50;
+int const WaitingTime_ms = 50;      //TODO:: Should it be lower?
 int LeftWheelSpeed;
 int RightWheelSpeed;
 
@@ -37,7 +37,8 @@ void GoForward()
     double previous_integral = 0;    
     int totalLeftWheel_Ticks = 0;
     int totalRightWheel_Ticks = 0;
-    double angleChange_radians = Math_PI / 2;
+    double current_angleChange_radians = Math_PI / 2;
+    double total_angleChange_radians = 0;
     double distance_X = 0;
     double distance_Y = 0;
     
@@ -64,14 +65,17 @@ void GoForward()
         double deltaSpeed = PID(deltaIR, Kp, Ki, Kd, (float) WaitingTime_ms, &previous_deltaIR, &previous_integral);
         SetDriveSpeed(StandardSpeed + deltaSpeed, StandardSpeed - deltaSpeed);
         
-        Track_Movement(&angleChange_radians, &distance_X, &distance_Y, &totalLeftWheel_Ticks, &totalRightWheel_Ticks);
+        Track_Movement(&current_angleChange_radians, &distance_X, &distance_Y, &totalLeftWheel_Ticks, &totalRightWheel_Ticks);
+        total_angleChange_radians += current_angleChange_radians;
         
-        if(-AngleChangeLimit < angleChange_radians && angleChange_radians < AngleChangeLimit)
+        if(-AngleChangeLimit < total_angleChange_radians && total_angleChange_radians < AngleChangeLimit)   // Small changes due to walls not being straight or IRdetection faults or PID faults
         {
             /* We update the previous deltaSpeed using a ponderate average so that we don't loose values.
-               We increase by one the number of cycles for which the angle remained almost unchanged */
+               We increase by one the number of cycles for which the angle remained almost unchanged.
+               We reset the total_angleChange_radians. */
                
             SpeedChange_DeltaSpeed[SpeedChange_Length] = Round((SpeedChange_DeltaSpeed[SpeedChange_Length] * SpeedChange_Cycles[SpeedChange_Length] + deltaSpeed) / (++SpeedChange_Cycles[SpeedChange_Length]));
+            total_angleChange_radians = 0;
         }
         else    // A sharp angle change was detected. The robot is at a turn.
         {
