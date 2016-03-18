@@ -22,6 +22,6 @@ int main()                                      // main function
 
     print("%c irLeft = %d, irRight = %d",       // Display detector states
            HOME,       irLeft,       irRight);
-    pause(100);                                 // Pause before repeating
+    pause(50);                                 // Pause before repeating
   }
 }
