@@ -1,4 +1,4 @@
-Task1.c
+Task_Final Maze.c
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
