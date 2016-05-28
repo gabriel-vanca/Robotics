@@ -1,0 +1,46 @@
+{
+    "robotsimulator":
+    {
+	"title": "Task 5 Map 1",
+	"arenaSize": [2000, 800],
+	"robots":
+	[
+	    {
+		"id": 0,
+		"type": "ActivityBot",
+		"startingPose": [100, 400, 0]
+	    }
+	],
+	"walls":
+	[
+            {
+		"startPoint": [0,600],
+		"endPoint": [400,600]
+	    },
+            {
+		"startPoint": [400,600],
+		"endPoint": [800,500]
+	    },
+            {
+		"startPoint": [800,500],
+		"endPoint": [1200,500]
+	    },
+            {
+		"startPoint": [1200,500],
+		"endPoint": [1200,100]
+	    },
+            {
+		"startPoint": [0,200],
+		"endPoint": [400,200]
+	    },
+            {
+		"startPoint": [400,200],
+		"endPoint": [800,100]
+	    },
+            {
+		"startPoint": [800,100],
+		"endPoint": [1200,100]
+	    }
+	]
+    }	
+}

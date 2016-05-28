@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/SD_with_Tests.dir/SD_with_Tests.c.o  -o SD_with_Tests -rdynamic ../../../src/libclient.a -lpthread 

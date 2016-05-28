@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Task_Final_Maze.dir/Task_Final_Maze.c.o  -o Task_Final_Maze -rdynamic ../src/libclient.a -lpthread 

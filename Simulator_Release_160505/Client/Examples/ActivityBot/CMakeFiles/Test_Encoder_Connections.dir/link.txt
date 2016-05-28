@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_Encoder_Connections.dir/Test_Encoder_Connections.c.o  -o Test_Encoder_Connections -rdynamic ../../src/libclient.a -lpthread 

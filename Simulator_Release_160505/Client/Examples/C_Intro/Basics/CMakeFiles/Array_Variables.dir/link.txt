@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Array_Variables.dir/Array_Variables.c.o  -o Array_Variables -rdynamic ../../../src/libclient.a -lpthread 

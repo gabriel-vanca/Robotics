@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Eduard_final_task.dir/Eduard_final_task.c.o  -o Eduard_final_task -rdynamic ../src/libclient.a -lpthread 

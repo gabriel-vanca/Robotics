@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/SD_for_Text_Files_and_Back_to_Variables.dir/SD_for_Text_Files_and_Back_to_Variables.c.o  -o SD_for_Text_Files_and_Back_to_Variables -rdynamic ../../../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_Ping.dir/Test_Ping.c.o  -o Test_Ping -rdynamic ../../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Whiskers_Push_Bot.dir/Whiskers_Push_Bot.c.o  -o Whiskers_Push_Bot -rdynamic ../../src/libclient.a -lpthread 

@@ -1,0 +1,6 @@
+DECLARE_APP(EEPROM_Data EEPROM_Data.c)
+DECLARE_APP(EEPROM_Progam_Modes EEPROM_Progam_Modes.c)
+DECLARE_APP(SD_Datalogger SD_Datalogger.c)
+DECLARE_APP(SD_for_Text_Files_and_Back_to_Variables SD_for_Text_Files_and_Back_to_Variables.c)
+DECLARE_APP(SD_Minimal SD_Minimal.c)
+DECLARE_APP(SD_with_Tests SD_with_Tests.c)

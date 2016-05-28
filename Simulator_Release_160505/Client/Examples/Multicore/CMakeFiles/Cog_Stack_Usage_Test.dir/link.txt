@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Cog_Stack_Usage_Test.dir/Cog_Stack_Usage_Test.c.o  -o Cog_Stack_Usage_Test -rdynamic ../../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Navigate_by_Light.dir/Navigate_by_Light.c.o  -o Navigate_by_Light -rdynamic ../../src/libclient.a -lpthread 

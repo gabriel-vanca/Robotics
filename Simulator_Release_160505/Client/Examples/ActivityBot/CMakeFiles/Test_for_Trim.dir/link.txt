@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_for_Trim.dir/Test_for_Trim.c.o  -o Test_for_Trim -rdynamic ../../src/libclient.a -lpthread 

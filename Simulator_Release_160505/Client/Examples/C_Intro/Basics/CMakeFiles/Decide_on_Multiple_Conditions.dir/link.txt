@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Decide_on_Multiple_Conditions.dir/Decide_on_Multiple_Conditions.c.o  -o Decide_on_Multiple_Conditions -rdynamic ../../../src/libclient.a -lpthread 

@@ -1,0 +1,70 @@
+{
+    "robotsimulator":
+    {
+	"title": "Task 4 Map 1",
+	"arenaSize": [1600, 900],
+	"robots":
+	[
+	    {
+		"id": 0,
+		"type": "ActivityBot",
+		"startingPose": [150, 400, 0]
+	    }
+	],
+	"walls":
+	[
+            {
+		"startPoint": [0,0],
+		"endPoint": [1600,0]
+	    },
+	    {
+		"startPoint": [1600,0],
+		"endPoint": [1600, 1600]
+	    },
+	    {
+		"startPoint": [1600,1600],
+		"endPoint": [0, 1600]
+	    },
+	    {
+		"startPoint": [0,1600],
+		"endPoint": [0, 0]
+	    },
+            {
+		"startPoint": [0,600],
+		"endPoint": [300, 500]
+	    },
+            {
+		"startPoint": [300,500],
+		"endPoint": [400, 475]
+	    },
+            {
+		"startPoint": [400,475],
+		"endPoint": [500, 479]
+	    },
+            {
+		"startPoint": [500,479],
+		"endPoint": [700, 629]
+	    },
+            {
+		"startPoint": [700,629],
+		"endPoint": [800, 729]
+	    },
+            {
+		"startPoint": [800,729],
+		"endPoint": [900, 750]
+	    },
+            {
+		"startPoint": [900,750],
+		"endPoint": [1200, 625]
+	    },
+            {
+		"startPoint": [1200,625],
+		"endPoint": [1500, 625]
+	    },
+            {
+		"startPoint": [1500,625],
+		"endPoint": [1500, 325]
+	    }
+	]
+    }	
+}

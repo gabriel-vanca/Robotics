@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Global_Exchange.dir/Global_Exchange.c.o  -o Global_Exchange -rdynamic ../../../src/libclient.a -lpthread 

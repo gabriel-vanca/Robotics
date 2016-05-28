@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_IR_Detectors.dir/Test_IR_Detectors.c.o  -o Test_IR_Detectors -rdynamic ../../src/libclient.a -lpthread 

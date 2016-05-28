@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Speeds_for_Navigation.dir/Speeds_for_Navigation.c.o  -o Speeds_for_Navigation -rdynamic ../../src/libclient.a -lpthread 

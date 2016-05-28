@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Print_from_Other_Core.dir/Print_from_Other_Core.c.o  -o Print_from_Other_Core -rdynamic ../../src/libclient.a -lpthread 

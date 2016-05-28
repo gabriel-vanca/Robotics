@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testPause.dir/testPause.c.o  -o testPause -rdynamic ../src/libclient.a -lpthread 

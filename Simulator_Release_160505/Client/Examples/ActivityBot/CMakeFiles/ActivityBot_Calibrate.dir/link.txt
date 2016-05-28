@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/ActivityBot_Calibrate.dir/ActivityBot_Calibrate.c.o  -o ActivityBot_Calibrate -rdynamic ../../src/libclient.a -lpthread 

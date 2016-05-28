@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Cog_End_Example.dir/Cog_End_Example.c.o  -o Cog_End_Example -rdynamic ../../src/libclient.a -lpthread 

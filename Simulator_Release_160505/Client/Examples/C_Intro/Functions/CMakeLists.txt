@@ -1,0 +1,5 @@
+DECLARE_APP(Function_Call Function_Call.c)
+DECLARE_APP(Function_with_Parameter Function_with_Parameter.c)
+DECLARE_APP(Function_with_Parameters_and_Return_Value Function_with_Parameters_and_Return_Value.c)
+DECLARE_APP(Global_Exchange Global_Exchange.c)
+DECLARE_APP(Multicore_Example Multicore_Example.c)

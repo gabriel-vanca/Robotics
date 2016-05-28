@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Variables_and_Calculations.dir/Variables_and_Calculations.c.o  -o Variables_and_Calculations -rdynamic ../../../src/libclient.a -lpthread 

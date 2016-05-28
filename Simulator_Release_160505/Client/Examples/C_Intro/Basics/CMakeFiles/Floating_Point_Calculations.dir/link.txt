@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Floating_Point_Calculations.dir/Floating_Point_Calculations.c.o  -o Floating_Point_Calculations -rdynamic ../../../src/libclient.a -lpthread 

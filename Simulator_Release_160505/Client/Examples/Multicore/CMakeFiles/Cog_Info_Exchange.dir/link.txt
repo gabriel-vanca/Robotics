@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Cog_Info_Exchange.dir/Cog_Info_Exchange.c.o  -o Cog_Info_Exchange -rdynamic ../../src/libclient.a -lpthread 

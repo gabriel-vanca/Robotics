@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testChangeEncoderTicks.dir/testChangeEncoderTicks.c.o  -o testChangeEncoderTicks -rdynamic ../src/libclient.a -lpthread 

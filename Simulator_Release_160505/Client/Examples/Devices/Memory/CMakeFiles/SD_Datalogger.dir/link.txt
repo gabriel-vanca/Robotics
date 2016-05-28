@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/SD_Datalogger.dir/SD_Datalogger.c.o  -o SD_Datalogger -rdynamic ../../../src/libclient.a -lpthread 

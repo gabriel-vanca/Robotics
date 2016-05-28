@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testGetPose.dir/testGetPose.c.o  -o testGetPose -rdynamic ../src/libclient.a -lpthread 

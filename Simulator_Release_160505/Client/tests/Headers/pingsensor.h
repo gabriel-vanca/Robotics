@@ -1,0 +1,13 @@
+#ifndef PINGSENSOR_HEADER_GUARD
+#define PINGSENSOR_HEADER_GUARD
+
+#include "ping.h"
+
+#define PIN_PING_SENSOR (8)
+
+int PING_GetSensorValue_CM()
+{
+    return ping_cm(PIN_PING_SENSOR);
+}
+
+#endif

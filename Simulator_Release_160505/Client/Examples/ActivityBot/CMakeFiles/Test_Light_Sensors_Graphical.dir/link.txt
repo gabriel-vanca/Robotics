@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_Light_Sensors_Graphical.dir/Test_Light_Sensors_Graphical.c.o  -o Test_Light_Sensors_Graphical -rdynamic ../../src/libclient.a -lpthread 

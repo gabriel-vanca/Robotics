@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Count_to_Ten.dir/Count_to_Ten.c.o  -o Count_to_Ten -rdynamic ../../../src/libclient.a -lpthread 

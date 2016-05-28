@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Detect_and_Turn_from_Obstacle.dir/Detect_and_Turn_from_Obstacle.c.o  -o Detect_and_Turn_from_Obstacle -rdynamic ../../src/libclient.a -lpthread 

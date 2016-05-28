@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Hello_Message.dir/Hello_Message.c.o  -o Hello_Message -rdynamic ../../../src/libclient.a -lpthread 

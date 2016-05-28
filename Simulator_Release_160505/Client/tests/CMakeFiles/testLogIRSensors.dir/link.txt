@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testLogIRSensors.dir/testLogIRSensors.c.o  -o testLogIRSensors -rdynamic ../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testGetSetTimeOfDay.dir/testGetSetTimeOfDay.c.o  -o testGetSetTimeOfDay -rdynamic ../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/ActivitiyBot_Display_Calibration.dir/ActivitiyBot_Display_Calibration.c.o  -o ActivitiyBot_Display_Calibration -rdynamic ../../src/libclient.a -lpthread 

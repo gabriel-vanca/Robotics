@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Make_a_Decision.dir/Make_a_Decision.c.o  -o Make_a_Decision -rdynamic ../../../src/libclient.a -lpthread 

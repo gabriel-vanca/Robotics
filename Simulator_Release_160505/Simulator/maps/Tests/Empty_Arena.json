@@ -1,0 +1,15 @@
+{
+    "robotsimulator":
+    {
+	"title": "Empty arena",
+	"arenaSize": [1600, 1600],
+	"robots":
+	[
+	    {
+		"id": 0,
+		"type": "ActivityBot",
+		"startingPose": [100, 800, 0]
+	    }
+	]
+    }	
+}

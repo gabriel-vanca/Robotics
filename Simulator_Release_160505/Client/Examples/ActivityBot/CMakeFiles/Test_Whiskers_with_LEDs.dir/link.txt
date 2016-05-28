@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_Whiskers_with_LEDs.dir/Test_Whiskers_with_LEDs.c.o  -o Test_Whiskers_with_LEDs -rdynamic ../../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Follow_with_Ping.dir/Follow_with_Ping.c.o  -o Follow_with_Ping -rdynamic ../../src/libclient.a -lpthread 

@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testTurningAngles.dir/testTurningAngles.c.o  -o testTurningAngles -rdynamic ../src/libclient.a -lpthread 

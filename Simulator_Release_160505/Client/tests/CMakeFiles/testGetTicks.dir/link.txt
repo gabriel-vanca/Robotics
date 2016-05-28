@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testGetTicks.dir/testGetTicks.c.o  -o testGetTicks -rdynamic ../src/libclient.a -lpthread 

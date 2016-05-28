@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Test_Whiskers_with_Terminal.dir/Test_Whiskers_with_Terminal.c.o  -o Test_Whiskers_with_Terminal -rdynamic ../../src/libclient.a -lpthread 

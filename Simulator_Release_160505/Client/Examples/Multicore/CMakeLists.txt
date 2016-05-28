@@ -1,0 +1,5 @@
+DECLARE_APP(Cog_Info_Exchange Cog_Info_Exchange.c)
+DECLARE_APP(Cog_Run_Example Cog_Run_Example.c)
+DECLARE_APP(Cog_Stack_Usage_Test Cog_Stack_Usage_Test.c)
+DECLARE_APP(Print_from_Other_Core Print_from_Other_Core.c)
+DECLARE_APP(Cog_End_Example Cog_End_Example.c)

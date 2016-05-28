@@ -1,0 +1,6 @@
+DECLARE_APP(Test_24LC512_with_I2C Test_24LC512_with_I2C.c)
+DECLARE_APP(XBee_UART_Command_Mode_Example XBee_UART_Command_Mode_Example.c)
+DECLARE_APP(MMA7455_Test_Z_Axis_with_SPI MMA7455_Test_Z_Axis_with_SPI.c)
+DECLARE_APP(XBee_UART_Loopback XBee_UART_Loopback.c)
+DECLARE_APP(Test_Masks_for_SPI Test_Masks_for_SPI.c)
+DECLARE_APP(Hello_Serial_LCD Hello_Serial_LCD.c)

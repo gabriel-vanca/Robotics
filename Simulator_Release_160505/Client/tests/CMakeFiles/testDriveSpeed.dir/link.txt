@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/testDriveSpeed.dir/testDriveSpeed.c.o  -o testDriveSpeed -rdynamic ../src/libclient.a -lpthread 

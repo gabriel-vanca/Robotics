@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/SD_Minimal.dir/SD_Minimal.c.o  -o SD_Minimal -rdynamic ../../../src/libclient.a -lpthread 

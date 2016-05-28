@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Multicore_Example.dir/Multicore_Example.c.o  -o Multicore_Example -rdynamic ../../../src/libclient.a -lpthread 
